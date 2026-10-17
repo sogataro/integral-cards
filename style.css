@@ -9,3 +9,5 @@
 .success-overlay{position:fixed;inset:0;z-index:20000;display:flex;align-items:center;justify-content:center;background:#fffdf585;pointer-events:none}.success-overlay span{color:#e64b49;font-family:Arial,sans-serif;font-size:min(90vw,90dvh);font-weight:700;line-height:1;text-shadow:0 4px 25px #fff8}.next-space .hint{margin:0}
 
 .qrrow{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;text-align:center}.qrrow>div{width:200px}.qrImg{width:200px;height:200px;display:block;margin:10px auto}.qrrow a{display:block;overflow-wrap:anywhere;font-size:12px;color:inherit}
+
+#feedback-form label{display:block;font-size:14px;margin:14px 0 6px}#feedback-message{width:100%;resize:vertical;border:1px solid #bacabc;border-radius:10px;padding:12px;font:inherit;color:inherit;background:#fff}#feedback-form .honeypot{display:none}#feedback-status{font-size:14px}

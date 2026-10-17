@@ -1,6 +1,6 @@
 'use strict';
-const APP_VERSION='0.1.0';
-const CHANGELOG=[{version:APP_VERSION,date:'2026-10-17',items:[{ja:'3〜7回のランダムなカード選択と、積分・別解の記号判定を追加。',en:'Draw a random number of cards and verify integrals symbolically.'}]}];
+const APP_VERSION='0.2.0';
+const CHANGELOG=[{version:APP_VERSION,date:'2026-10-17',items:[{ja:'FBボタンからご意見や不具合を送れるようになりました。',en:'Send comments and bug reports using the FB button.'}]},{version:'0.1.0',date:'2026-10-17',items:[{ja:'3〜7回のランダムなカード選択と、積分・別解の記号判定を追加。',en:'Draw a random number of cards and verify integrals symbolically.'}]}];
 const $=id=>document.getElementById(id),t=key=>I18N.t(key);
 const saved=k=>{try{return localStorage.getItem(k);}catch{return null;}},store=(k,v)=>{try{localStorage.setItem(k,v);}catch{}};
 const seenKey='integral-cards/seen-version';
@@ -87,3 +87,6 @@ $('fullscreen-btn').hidden=!(document.documentElement.requestFullscreen||documen
 $('fullscreen-btn').onclick=async()=>{try{if(document.fullscreenElement||document.webkitFullscreenElement)await(document.exitFullscreen||document.webkitExitFullscreen).call(document);else await(document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen).call(document.documentElement);}catch{}};
 document.addEventListener('fullscreenchange',render);document.addEventListener('webkitfullscreenchange',render);
 reset();initQuickTips();
+
+let feedbackBusy=false;
+$('feedback-form').onsubmit=async event=>{event.preventDefault();if(feedbackBusy)return;const message=$('feedback-message').value.trim(),contact=$('feedback-contact').value.trim();if(!message){$('feedback-status').textContent=t('c.feedbackEmpty');$('feedback-message').focus();return;}if(message.length>2000||contact.length>200)return;feedbackBusy=true;$('feedback-send').disabled=true;$('feedback-message').readOnly=true;$('feedback-contact').readOnly=true;$('feedback-status').textContent=t('c.feedbackSending');try{const result=await sendFeedback({app:'integral-cards',version:APP_VERSION,lang:I18N.lang(),message,contact,website:$('feedback-website').value});$('feedback-status').textContent=t(result.ok===true?'c.feedbackThanks':'c.feedbackError');if(result.ok===true){$('feedback-message').value='';$('feedback-contact').value='';}}catch{$('feedback-status').textContent=t('c.feedbackError');}finally{feedbackBusy=false;$('feedback-send').disabled=false;$('feedback-message').readOnly=false;$('feedback-contact').readOnly=false;}};

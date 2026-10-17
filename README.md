@@ -9,7 +9,7 @@ Play: https://sogataro.github.io/integral-cards/
 - Adjacent factors multiply; division toggles denominator mode.
 - Indefinite and definite integrals; symbolic alternative-answer verification.
 - Japanese / English, full screen, help, settings and changelog.
-- Feedback window (sending awaits configuration).
+- FB button to send comments and bug reports.
 
 ## Usage
 Select a card, continue, and start solving. Enter expressions using `*`, `^`, `sin(x)`, `log(x)` or `ln(x)`, `exp(x)` and `abs(x)`. Indefinite answers require `+C` or `+c`. Real numbers and radians only. Zoom is supported on phones.
@@ -23,7 +23,7 @@ node --test
 Open http://localhost:8018/ or the computer's LAN address on a phone on the same network. A static HTTP server also works. No CDN or remote mathematical service is used.
 
 ## Stored data
-Only level, language and changelog read status are stored in localStorage under `integral-cards/`. Problems and answers are not saved. Feedback transmission is not configured.
+Only level, language and changelog read status are stored in localStorage under `integral-cards/`. Problems and answers are not saved. Feedback is sent to Google Apps Script only when you press Send; message, optional contact, app name, version and language are included.
 
 ## Mathematical limits
 Nerdamer 1.1.13 is bundled under its MIT license (`vendor/package/license.txt`). A dedicated Worker is terminated after 9 seconds. Answers are verified by differentiation, simplification and expansion, with a second pass for supported trigonometric identities. Numerical counterexamples disprove equality; numerical agreement never proves it. This is symbolic verification, not a language-model reasoning service.

@@ -19,6 +19,7 @@
   <script defer src="strings.js"></script>
   <script defer src="engine.js"></script>
   <script defer src="quick-tips.js"></script>
+  <script defer src="feedback.js"></script>
   <script defer src="main.js"></script>
 </head>
 <body>
@@ -49,7 +50,7 @@
     <div class="sheet-row"><span data-i18n="c.data"></span><button id="clear-data" class="btn danger" data-i18n="c.clearData"></button></div>
   </dialog>
   <dialog id="helpOverlay" aria-labelledby="help-heading"><div class="sheet-head"><h2 id="help-heading" data-i18n="c.help"></h2><button class="btn btn-icon close" data-i18n-title="c.close" data-i18n-aria-label="c.close">✕</button></div><div class="prose" data-i18n-html="help"></div></dialog>
-  <dialog id="feedbackOverlay" aria-labelledby="feedback-heading"><div class="sheet-head"><h2 id="feedback-heading" data-i18n="c.feedback"></h2><button class="btn btn-icon close" data-i18n-title="c.close" data-i18n-aria-label="c.close">✕</button></div><p data-i18n="feedbackUnavailable"></p></dialog>
+  <dialog id="feedbackOverlay" aria-labelledby="feedback-heading"><div class="sheet-head"><h2 id="feedback-heading" data-i18n="c.feedback"></h2><button class="btn btn-icon close" data-i18n-title="c.close" data-i18n-aria-label="c.close">✕</button></div><form id="feedback-form" novalidate><p data-i18n="c.feedbackLead"></p><label for="feedback-message" data-i18n="c.feedbackMessage"></label><textarea id="feedback-message" maxlength="2000" rows="5" required data-i18n-placeholder="c.feedbackPlaceholder"></textarea><label for="feedback-contact" data-i18n="c.feedbackContact"></label><input id="feedback-contact" maxlength="200" autocomplete="email"><input id="feedback-website" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true"><p class="hint" data-i18n="c.feedbackNote"></p><p id="feedback-status" role="status" aria-live="polite"></p><button type="submit" id="feedback-send" class="primary" data-i18n="c.feedbackSend"></button></form></dialog>
   <dialog id="changelogOverlay" aria-labelledby="changelog-heading"><div class="sheet-head"><h2 id="changelog-heading" data-i18n="c.changelog"></h2><button class="btn btn-icon close" data-i18n-title="c.close" data-i18n-aria-label="c.close">✕</button></div><div id="changelog-list"></div></dialog>
   <dialog id="qrOverlay" aria-labelledby="share-heading"><div class="sheet-head"><h2 id="share-heading" data-i18n="c.share"></h2><button class="btn btn-icon close" data-i18n-title="c.close" data-i18n-aria-label="c.close">✕</button></div><div class="qrrow"><div><strong>App</strong><img class="qrImg" src="qr.svg" alt="App QR"><a href="https://sogataro.github.io/integral-cards/">https://sogataro.github.io/integral-cards/</a></div><div><strong>Source</strong><img class="qrImg" src="src-qr.svg" alt="Source QR"><a href="https://github.com/sogataro/integral-cards">https://github.com/sogataro/integral-cards</a></div></div></dialog>
 </body>
