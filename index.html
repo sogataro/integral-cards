@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title>積分右左どっち？</title>
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <meta name="description" content="Draw cards to build an integral, then solve it and check equivalent answers.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="積分右左どっち？">
+  <meta property="og:description" content="Draw cards to build an integral, then solve it and check equivalent answers.">
+  <meta property="og:url" content="https://sogataro.github.io/integral-cards/">
+  <meta property="og:image" content="https://sogataro.github.io/integral-cards/icon-192.png">
+  <meta name="twitter:card" content="summary">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="i18n.js"></script>
+  <script defer src="strings.js"></script>
+  <script defer src="engine.js"></script>
+  <script defer src="quick-tips.js"></script>
+  <script defer src="main.js"></script>
+</head>
+<body>
+<div id="success-overlay" class="success-overlay" role="status" data-i18n-aria-label="correct" hidden><span aria-hidden="true">〇</span></div>
+  <header class="app-header">
+    <div class="app-brand"><span class="brand-mark" aria-hidden="true">✦</span><h1 class="app-title">積分右左どっち？</h1><button id="appVersion" class="app-version" data-i18n-title="c.changelog"></button></div>
+    <nav class="header-actions" aria-label="Tools">
+      <button id="fullscreen-btn" class="btn btn-icon" title="全画面表示" aria-label="全画面表示"><svg class="fs-enter" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg><svg class="fs-exit" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M20 15h-5v5M4 15h5v5"/></svg></button>
+      <button id="feedback-btn" class="btn btn-icon" data-i18n-title="c.feedback" data-i18n-aria-label="c.feedback"><span class="fb-mark" aria-hidden="true">FB</span></button>
+      <button id="help-btn" class="btn btn-icon" data-i18n-title="c.help" data-i18n-aria-label="c.help">?</button>
+      <button id="settings-btn" class="btn btn-icon" aria-expanded="false" data-i18n-title="c.settings" data-i18n-aria-label="c.settings">⚙</button>
+    </nav>
+  </header>
+  <main>
+<section class="intro"><p class="eyebrow">CHANCE × CALCULUS</p><h2 data-i18n="headline"></h2><p class="lead" data-i18n="lead"></p></section>
+<section class="problem"><p class="label" data-i18n="problem"></p><div id="equation" class="equation" aria-live="polite"></div></section><div class="level-bar"><label for="level-select" data-i18n="level"></label><select id="level-select"><option value="1" data-i18n="level1"></option><option value="2" data-i18n="level2"></option></select></div><section class="board"><div class="board-head"><h3 data-i18n="draw"></h3><span id="round" class="round"></span></div><div class="track"><div id="progress"></div></div>
+<div id="draw-panel"><h4 id="step-label"></h4><div class="cards"><button class="card" id="card-0"><span class="face">∫</span><span class="card-note"></span></button><button class="card" id="card-1"><span class="face">∫</span><span class="card-note"></span></button></div><div class="next-space"><p class="hint" data-i18n="autoNext"></p><button class="primary" id="next" hidden></button></div></div>
+<div class="collection-wrap"><p class="label" data-i18n="collected"></p><div id="collection" class="collection" aria-live="polite"></div><p id="collection-empty" data-i18n="empty"></p></div>
+<div id="answer-panel" hidden><form id="answer-form"><label for="answer" data-i18n="answer"></label><input id="answer" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="300" aria-describedby="answer-hint"><div class="math-keys" role="group" data-i18n-aria-label="insertFunctions"><button type="button" class="btn" data-insert="sin(x)">sin(x)</button><button type="button" class="btn" data-insert="cos(x)">cos(x)</button><button type="button" class="btn" data-insert="log(x)">log(x)</button><button type="button" class="btn" data-insert="exp(x)">exp(x)</button><button type="button" class="btn" data-insert="x">x</button><button type="button" class="btn" data-insert="^">^</button><button type="button" class="btn" data-insert="+C">+C</button></div><div class="number-keys" role="group" data-i18n-aria-label="numberKeys"><button type="button" class="btn" data-insert="7">7</button><button type="button" class="btn" data-insert="8">8</button><button type="button" class="btn" data-insert="9">9</button><button type="button" class="btn" data-insert="/">÷</button><button type="button" class="btn" data-insert="4">4</button><button type="button" class="btn" data-insert="5">5</button><button type="button" class="btn" data-insert="6">6</button><button type="button" class="btn" data-insert="*">×</button><button type="button" class="btn" data-insert="1">1</button><button type="button" class="btn" data-insert="2">2</button><button type="button" class="btn" data-insert="3">3</button><button type="button" class="btn" data-insert="-">−</button><button type="button" class="btn" data-insert="0">0</button><button type="button" class="btn" data-insert=".">.</button><button type="button" class="btn" data-insert="pi">π</button><button type="button" class="btn" data-insert="+">+</button><button type="button" class="btn" data-insert="(">(</button><button type="button" class="btn" data-insert=")">)</button><button type="button" class="btn" id="key-backspace" data-i18n-title="backspace" data-i18n-aria-label="backspace">⌫</button><button type="button" class="btn" id="key-right" data-i18n-title="cursorRight" data-i18n-aria-label="cursorRight">→</button></div><p class="hint" data-i18n="powerHint"></p><p class="hint" data-i18n="insertHint"></p><p class="hint" id="answer-hint" data-i18n="hint"></p><div class="answer-actions"><button type="submit" class="primary" id="check" data-i18n="check"></button><button type="button" class="btn" id="impossible" data-i18n="impossible"></button><button type="button" class="btn" id="show" data-i18n="show"></button></div></form><p id="status" class="status" role="status" aria-live="polite"></p><div id="solution" class="solution" aria-live="polite" hidden></div></div>
+</section>
+<div class="below"><p data-i18n="rules"></p><button class="text-button" id="reset" data-i18n="reset"></button></div><footer data-i18n="footer"></footer>
+</main>
+  <dialog id="settings-panel" aria-labelledby="settings-heading"><div class="sheet-head"><h2 id="settings-heading" data-i18n="c.settings"></h2><button class="btn btn-icon close" data-i18n-title="c.close" data-i18n-aria-label="c.close">✕</button></div>
+    <div class="sheet-row"><label for="lang-select" data-i18n="c.language"></label><select id="lang-select"><option value="ja">日本語</option><option value="en">English</option></select></div>
+    <div class="sheet-row"><span data-i18n="c.share"></span><button class="btn" data-open="qrOverlay" data-i18n="c.showQr"></button></div>
+    <div class="sheet-row"><span data-i18n="c.changelog"></span><button class="btn" id="changelogBtn" data-i18n="c.showChangelog"></button></div>
+    <div class="sheet-row"><span data-i18n="c.otherApps"></span><a class="btn" href="https://sogataro.github.io/" target="_blank" rel="noopener" data-i18n="c.openPortal"></a></div>
+    <div class="sheet-row"><span data-i18n="c.data"></span><button id="clear-data" class="btn danger" data-i18n="c.clearData"></button></div>
+  </dialog>
+  <dialog id="helpOverlay" aria-labelledby="help-heading"><div class="sheet-head"><h2 id="help-heading" data-i18n="c.help"></h2><button class="btn btn-icon close" data-i18n-title="c.close" data-i18n-aria-label="c.close">✕</button></div><div class="prose" data-i18n-html="help"></div></dialog>
+  <dialog id="feedbackOverlay" aria-labelledby="feedback-heading"><div class="sheet-head"><h2 id="feedback-heading" data-i18n="c.feedback"></h2><button class="btn btn-icon close" data-i18n-title="c.close" data-i18n-aria-label="c.close">✕</button></div><p data-i18n="feedbackUnavailable"></p></dialog>
+  <dialog id="changelogOverlay" aria-labelledby="changelog-heading"><div class="sheet-head"><h2 id="changelog-heading" data-i18n="c.changelog"></h2><button class="btn btn-icon close" data-i18n-title="c.close" data-i18n-aria-label="c.close">✕</button></div><div id="changelog-list"></div></dialog>
+  <dialog id="qrOverlay" aria-labelledby="share-heading"><div class="sheet-head"><h2 id="share-heading" data-i18n="c.share"></h2><button class="btn btn-icon close" data-i18n-title="c.close" data-i18n-aria-label="c.close">✕</button></div><div class="qrrow"><div><strong>App</strong><img class="qrImg" src="qr.svg" alt="App QR"><a href="https://sogataro.github.io/integral-cards/">https://sogataro.github.io/integral-cards/</a></div><div><strong>Source</strong><img class="qrImg" src="src-qr.svg" alt="Source QR"><a href="https://github.com/sogataro/integral-cards">https://github.com/sogataro/integral-cards</a></div></div></dialog>
+</body>
+</html>
