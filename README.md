@@ -34,3 +34,5 @@ Non-elementarity is established only for nonzero constant multiples of `sin(x)/x
 MIT. Copyright (c) 2026 Yu Kamimizu.
 
 Level 2 adds sin(2*x), cos(2*x), sin(x^2), cos(x^2), log(x+1), and exp(2*x). Function buttons insert editable arguments; changing level starts a new game.
+
+Before starting, select level, random or fixed card count (3–7 including ∫), and the sin/cos/log/exp card pool. Level 2 requires at least one function. Setup preferences are stored locally.

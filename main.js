@@ -1,6 +1,6 @@
 'use strict';
-const APP_VERSION='0.2.0';
-const CHANGELOG=[{version:APP_VERSION,date:'2026-10-17',items:[{ja:'FBボタンからご意見や不具合を送れるようになりました。',en:'Send comments and bug reports using the FB button.'}]},{version:'0.1.0',date:'2026-10-17',items:[{ja:'3〜7回のランダムなカード選択と、積分・別解の記号判定を追加。',en:'Draw a random number of cards and verify integrals symbolically.'}]}];
+const APP_VERSION='0.3.0';
+const CHANGELOG=[{version:APP_VERSION,date:'2026-10-17',items:[{ja:'開始前にレベル・枚数・関数を選べるようになりました。',en:'Choose your level, card count and functions before starting.'}]},{version:'0.2.0',date:'2026-10-17',items:[{ja:'FBボタンからご意見や不具合を送れるようになりました。',en:'Send comments and bug reports using the FB button.'}]},{version:'0.1.0',date:'2026-10-17',items:[{ja:'3〜7回のランダムなカード選択と、積分・別解の記号判定を追加。',en:'Draw a random number of cards and verify integrals symbolically.'}]}];
 const $=id=>document.getElementById(id),t=key=>I18N.t(key);
 const saved=k=>{try{return localStorage.getItem(k);}catch{return null;}},store=(k,v)=>{try{localStorage.setItem(k,v);}catch{}};
 const seenKey='integral-cards/seen-version';
@@ -9,8 +9,11 @@ I18N.init('integral-cards/lang',STRINGS);
 let total,round,tokens,mode,choices,selected=null,playing=false,busy=false,worker=null,message='',solution=null,revealed=false,epoch=0;
 let level=saved('integral-cards/level')==='2'?2:1;
 let advanceTimer=0,successTimer=0;
-function reset(){epoch++;clearTimeout(advanceTimer);clearTimeout(successTimer);$('success-overlay').hidden=true;if(worker)worker.terminate();worker=null;total=IntegralEngine.drawCount();round=0;tokens=[];mode=null;selected=null;playing=false;busy=false;message='';solution=null;revealed=false;$('answer').value='';deal();}
-function deal(){choices=IntegralEngine.pair(round,total,tokens,Math.random,level);selected=null;render();}
+let started=false,cardCount=saved('integral-cards/count')||'random',functionNames=['sin','cos','log','exp'];
+try{const stored=JSON.parse(saved('integral-cards/functions'));if(Array.isArray(stored))functionNames=stored.filter(s=>['sin','cos','log','exp'].includes(s));}catch{}
+if(!['random','3','4','5','6','7'].includes(cardCount))cardCount='random';
+function reset(){epoch++;started=false;clearTimeout(advanceTimer);clearTimeout(successTimer);$('success-overlay').hidden=true;if(worker)worker.terminate();worker=null;total=cardCount==='random'?IntegralEngine.drawCount():Number(cardCount);round=0;tokens=[];mode=null;choices=[];selected=null;playing=false;busy=false;message='';solution=null;revealed=false;$('answer').value='';render();}
+function deal(){choices=IntegralEngine.pair(round,total,tokens,Math.random,level,functionNames);selected=null;render();}
 function cardLabel(c){return typeof c==='string'?c==='*'?'×':c==='/'?'÷':c==='-'?'−':c: c.kind==='indefinite'?'∫':`∫ [${c.aLabel??c.a}, ${c.bLabel??c.b}]`;}
 function math(cards){
  const node=(tag,text,...children)=>{const el=document.createElementNS('http://www.w3.org/1998/Math/MathML',tag);if(text!==null)el.textContent=text;el.append(...children);return el;};
@@ -27,6 +30,7 @@ function math(cards){
  });if(!area.children.length)area.append(node('mn','0'));return area;
 }
 function render(){
+ $('setup-panel').hidden=started;$('game-board').hidden=!started;$('problem-panel').hidden=!started;$('game-bottom').hidden=!started;
  $('lang-select').value=I18N.lang();$('round').textContent=`${Math.min(round+1,total)} / ${total}`;
  $('level-select').value=String(level);
  $('step-label').textContent=t(round===0?'first':'next');
@@ -58,7 +62,10 @@ function advance(){clearTimeout(advanceTimer);if(selected===null||playing)return
 for(let i=0;i<2;i++)$('card-'+i).onclick=()=>{if(selected!==null||playing)return;selected=i;if(round===0)mode=choices[i];else tokens.push(choices[i]);render();const current=epoch;advanceTimer=setTimeout(()=>{if(current===epoch)advance();},600);};
 $('next').onclick=advance;
 $('reset').onclick=reset;
-$('level-select').onchange=e=>{level=Number(e.target.value);store('integral-cards/level',String(level));reset();};
+$('level-select').onchange=e=>{level=Number(e.target.value);store('integral-cards/level',String(level));$('setup-error').textContent='';};
+$('count-select').value=cardCount;
+document.querySelectorAll('[name="function"]').forEach(el=>el.checked=functionNames.includes(el.value));
+$('setup-form').onsubmit=e=>{e.preventDefault();level=Number($('level-select').value);cardCount=$('count-select').value;functionNames=[...document.querySelectorAll('[name="function"]:checked')].map(el=>el.value);if(level===2&&!functionNames.length){$('setup-error').textContent=t('chooseFunction');return;}store('integral-cards/level',String(level));store('integral-cards/count',cardCount);store('integral-cards/functions',JSON.stringify(functionNames));$('setup-error').textContent='';reset();started=true;deal();$('card-0').focus();};
 document.querySelectorAll('[data-insert]').forEach(button=>button.onclick=()=>{
  const input=$('answer');if(busy)return;const start=input.selectionStart??input.value.length,end=input.selectionEnd??start,selectedText=input.value.slice(start,end),template=button.dataset.insert;
  const text=template==='^'?'^()':template.includes('(x)')?template.replace('(x)','('+(selectedText||'x')+')'):template;

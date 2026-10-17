@@ -1,6 +1,10 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const E=require('../engine.js'),n=require('../vendor/package/all.js');
 const ind={kind:'indefinite'},def={kind:'definite',a:1,b:2};
+test('function selection filters cards and preserves the level two guarantee',()=>{
+ for(const names of [[],['sin'],['cos'],['log'],['exp'],['sin','log']])for(const level of [1,2]){if(level===2&&!names.length)continue;for(let run=0;run<40;run++){const tokens=[];for(let round=1;round<7;round++){const choices=E.pair(round,7,tokens,Math.random,level,names);for(const card of choices)if(card.includes('('))assert.ok(names.includes(card.slice(0,card.indexOf('('))));tokens.push(choices[run%2]);}if(level===2)assert.ok(tokens.some(s=>E.LEVEL2_FACTORS.includes(s)&&!E.FACTORS.includes(s)));}}
+ assert.throws(()=>E.pair(1,3,[],Math.random,2,[]));
+});
 test('level two always includes a composite card along either selection path',()=>{
  for(let run=0;run<300;run++){const count=3+run%5,tokens=[];for(let round=1;round<count;round++){const choices=E.pair(round,count,tokens,Math.random,2);if(round===count-1&&!tokens.some(s=>E.LEVEL2_FACTORS.includes(s)&&!E.FACTORS.includes(s)))assert.ok(choices.every(s=>E.LEVEL2_FACTORS.includes(s)&&!E.FACTORS.includes(s)));tokens.push(choices[run%2]);}assert.ok(tokens.some(s=>E.LEVEL2_FACTORS.includes(s)&&!E.FACTORS.includes(s)));}
 });

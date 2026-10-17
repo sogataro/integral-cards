@@ -9,11 +9,14 @@ function problemMode(mode,tokens){
  if(!mode||mode.kind!=='definite'||!tokens.some(s=>/^(sin|cos)\(/.test(s)))return mode;
  return {...mode,a:Math.PI/6,b:mode.b===3?Math.PI/2:Math.PI/3,aExact:'pi/6',bExact:mode.b===3?'pi/2':'pi/3',aLabel:'π/6',bLabel:mode.b===3?'π/2':'π/3'};
 }
-function pair(round,total,tokens,r=Math.random,level=1){
+function pair(round,total,tokens,r=Math.random,level=1,functionNames=['sin','cos','log','exp']){
  if(round===0) return [0,1].map(()=>r()<.5?{kind:'indefinite'}:{kind:'definite',a:1,b:r()<.5?2:3});
- if(level===2&&round===total-1&&!tokens.some(s=>LEVEL2_FACTORS.includes(s)&&!FACTORS.includes(s)))return [0,1].map(()=>pick(LEVEL2_FACTORS.slice(FACTORS.length),r));
+ const permitted=s=>!s.includes('(')||functionNames.includes(s.slice(0,s.indexOf('(')));
+ const pool=(level===2?LEVEL2_FACTORS:FACTORS).filter(permitted),composites=LEVEL2_FACTORS.slice(FACTORS.length).filter(permitted);
+ if(level===2&&!composites.length)throw Error('Choose at least one function for level 2');
+ if(level===2&&round===total-1&&!tokens.some(s=>composites.includes(s)))return [0,1].map(()=>pick(composites,r));
  const allow=round>1&&round<total-1&&!OPS.includes(tokens.at(-1));
- return [0,1].map(()=>allow&&r()<.30?pick(OPS,r):pick(level===2?LEVEL2_FACTORS:FACTORS,r));
+ return [0,1].map(()=>allow&&r()<.30?pick(OPS,r):pick(pool,r));
 }
 function expression(tokens){
  if(!tokens.length||OPS.includes(tokens[0])||OPS.includes(tokens.at(-1)))throw Error('invalid');

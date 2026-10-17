@@ -34,3 +34,5 @@ MITのNerdamer 1.1.13を同梱（`vendor/package/license.txt`）。計算Worker�
 MIT。Copyright (c) 2026 Yu Kamimizu.
 
 レベル２は sin(2*x)、cos(2*x)、sin(x^2)、cos(x^2)、log(x+1)、exp(2*x) を追加。関数ボタンは中身を編集できます。レベル変更で新しいゲームを開始します。
+
+開始前にレベル、枚数（∫を含む3〜7枚の固定またはランダム）、sin/cos/log/expの出題候補を選べます。レベル2は関数を1種類以上選択。開始設定はブラウザに保存します。
